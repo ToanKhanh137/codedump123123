@@ -2,56 +2,51 @@
 
 using namespace std;
 
-int N;
-int a[100][100];
-int cnt[100];
-int dr[4] = {0, 0, -1, 1};
-int dc[4] = {-1, 1, 0, 0};
-bool visited[100][100];
-bool isValid(int r, int c) {
-	return r >= 1 && c >= 1 && r <= N && c <= N;
-}
-
-void dfs(int r, int c, int val) {
-	if(isValid(r, c)) {
-		a[r][c] = -1;
-		dfs(r+1,c,val); dfs(r-1,c,val); dfs(r,c-1,val); dfs(r+1,c+1,val);
-	}
-}
+const char* num[10] = {"ZRO", "ONE", "TWO", "THR", "FOR", "FIV", "SIX", "SVN", "EGT", "NIN"};
 
 int main() {
 	ios_base::sync_with_stdio(false);
 	cin.tie(NULL);
-	//freopen("input.txt", "r", stdin);
+	//freopen("GNS_test_input.txt", "r", stdin);
+	//freopen("output.txt", "w", stdout);
 	int T;
 	cin >> T;
 	for(int tc = 1; tc <= T; tc++) {
-		cin >> N;
-		for(int i = 1; i <= N; i++) {
-			for(int j = 1; j <= N; j++) {
-				a[i][j] = 0;
-				visited[i][j] = false;
+		char trash[10];
+		int N;
+		int cnt[10];
+		for(int i = 0; i < 10; i++) cnt[i] = 0;
+		cin >> trash >> N;
+		for(int i = 0; i < N; i+= 4) {
+			char s[5];
+			cin >> s;
+			if(s[0] == 'Z') {
+				cnt[0]++;
+			} else if(s[0] == 'O') {
+				cnt[1]++;
+			} else if(s[0] == 'T') {
+				if(s[1] == 'W') cnt[2]++;
+				else cnt[3]++;
+			} else if(s[0] == 'F') {
+				if(s[1] == 'O') cnt[4]++;
+				else cnt[5]++;
+			} else if(s[0] == 'S') {
+				if(s[1] == 'I') cnt[6]++;
+				else cnt[7]++;
+			} else if(s[0] == 'E') {
+				cnt[8]++;
+			} else if(s[0] == 'N') {
+				cnt[9]++;
 			}
 		}
-		for(int i = 1; i <= N - 1; i++) {
-			for(int j = 1; j <= N; j++) {
-				int row_idx; cin >> row_idx;
-				int col_idx; cin >> col_idx;
-				a[row_idx][col_idx] = i;
+		cout << '#' << tc << '\n';
+		for(int i = 0; i < 10; i++) {
+			while(cnt[i] > 0) {
+				cout << num[i] << ' ';
+				cnt[i]--;
 			}
 		}
-		int so_cum = 0;
-		for(int r = 1; r <= N; r++) {
-			for(int c = 1; c <= N; c++) {
-				if(a[r][c] != 0 && a[r][c] != - 1) {
-					so_cum++;
-					dfs(r, c, a[r][c]);
-				}
-			}
-		}
-		cout << "Case #" << tc << '\n';
-		if(so_cum == N) cout << "good\n";
-		else cout << "wrong\n";
+		cout << '\n';
 	}
 	return 0;
 }
