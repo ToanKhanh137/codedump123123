@@ -1,131 +1,58 @@
-// [Problem]
-
-// There are magnetic objects on a table. Different colors are applied according to the properties of the magnetic objects. The blue ones are attracted to N polar while the red ones are attracted to the S polar.
-
- 
-
-// Create a program returning the number of standstill magnetic objects left on the table after crashing to each other as some time has passed after a strong magnetic field is applied to the table in a specific interval as shown in the example.
-
- 
-
-// Following figure shows the table with the magnetic objects as seen from the above.
-
-
-
- 
-
-// The red magnetic objects marked A are attracted to the S polar and dropped below the table.
-
-// The blue magnetic objects marked B are attracted to the N polar and dropped below the table.
-
-// Other magnetic objects crash to each other and become standstill.
-
-// As shown by the magnetic objects marked D, the objects will be standstill if there is a magnetic object moving in the opposite direction even if there are many magnetic objects moving to a direction.
-
-// It is regarded as a standstill even when there are three or more magnetic objects crashing with each other and stuck together like those marked D.
-
-// Although C and D are adjacent to each other, they are considered different standstills and thus regarded as two standstills.
-
-// Like the case of E, there can be two or more standstills on a line.
-
-// In the above example, the program should return 5 since there are 5 standstills on the table.
-
- 
-
- 
-
-// [Constraints]
-
-// A magnetic object only reacts to the N polar or S polar at the top and bottom of the table. It does not react to another magnetic object.
-
-// A table is sized 100x100. (It should be noted that the above example uses a 7x7 table just for explanation.)
-
- 
-
-// [Input]
-
-// The first line of the input file provides the length of a side of the square shaped table. The test cases are given in next lines. Total of 10 test cases are given. 1 means the magnetic object with N polar property and 2 means the magnetic object with S polar property. It is assumed that the N polar is located at the top of the table while the S polar is located at the bottom.
-
- 
-
- 
-
-// [Output]
-
-// The output file outputs the test case number following the ‘#’ symbol. It is followed by a space and then the number of standstills.
-
- 
-
- 
-
-// [Input Example] 
-
-// 100
-// 1 0 0 0 0 0 0 0 2 0 0 0 1 0 1 1 0 2 0 0 1 0 2 0 2 2 1 0 0 0 0 0 1 0 0 2 0 0 0 0 0 1 2 0 0 0 1 1...
-
-// 0 0 0 0 0 0 0 0 0 0 1 0 0 2 0 0 0 0 0 2 0 0 1 0 0 0 0 0 1 2 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0...
-
-// 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 2 2 0 2 0 0 0 0 0 1 0 0...
-
-// 0 0 0 2 0 0 0 0 1 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 1 0 1 0 0 0 0 0 0 2 0 2 0...
-
-// 0 0 0 0 2 0 2 0 0 0 2 0 0 0 0 0 0 2 1 1 0 2 0 0 0 1 2 2 2 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0...
-
-// 0 0 2 0 0 0 1 1 1 0 0 0 0 0 0 0 0 1 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1 0...
-
-// ...
-
-
-// 100
-// 0 0 0 0 0 0 0 0 0 2 0 0 2 0 0 0 0 0 0 2 0 0 0 1 0 0 0 0 0 0 1 0 2 0 2 0 1 0 1 0 0 0 0 1 0 0 0 0...
-
-// 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0...
-
-// 0 0 0 0 2 0 0 0 1 2 1 0 0 0 0 1 0 0 0 0 0 2 0 0 0 0 0 2 2 1 2 0 0 0 0 0 0 1 0 1 0 0 0 0 0 0 0 0...
-
-// 2 2 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 1 2 0 2 0 0 0...
-
-// 0 1 1 0 2 0 0 0 0 0 0 0 0 0 0 1 0 0 1 0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 2 0 0 0 2 0 0 0 0...
-
-// 1 0 0 0 0 1 0 2 0 0 0 0 2 0 2 0 0 0 0 0 0 0 0 0 2 0 0 1 2 0 0 0 0 1 0 0 1 0 0 0 2 0 0 2 2 0 0 0...
-
-// ...
-
-
- 
-
-// [Output Example]
-
-// #1 471
-// #2 446
 #include <iostream>
 
 using namespace std;
 
-int grid[100][100];
+int N, M, K;
+int grid[51][51];
+int query[30];
+bool canDo[30];
 
-int stack[1000];
-int top;
+struct Point {
+	int startRow;
+	int startCol;
+	int endRow;
+	int endCol;
+	int slot;
+};
 
-void init(){
-	top = -1;
+Point s1[5000];
+int top1 = -1;
+
+void push1(Point a) {
+	top1++;
+	s1[top1] = a;
 }
 
-void push(int val) {
-	top++;
-	stack[top] = val;
+Point pop1() {
+	top1--;
+	return s1[top1 + 1];
 }
 
-void pop() {
-	top--;
+Point s2[5000];
+int top2 = -1;
+
+void push2(Point a) {
+	top2++;
+	s2[top2] = a;
 }
 
-bool isEmpty() {
-	return top == -1;
+Point pop2() {
+	top2--;
+	return s2[top2 + 1];
 }
 
-int peek() {
-	return stack[top];
+int cntSlot(int sr, int sc, int er, int ec) {
+	int sum = 0;
+	for(int i = sr; i <= er; i++) {
+		for(int j = sc; j <= ec; j++) {
+			sum+= grid[i][j];
+		}
+	}
+	return sum;
+}
+
+bool isValid(int r, int c) {
+	return r > 0 && c > 0 && r <= N && c <= M;
 }
 
 int main() {
@@ -133,34 +60,66 @@ int main() {
 	cin.tie(NULL);
 	//freopen("input.txt", "r", stdin);
 	int T;
-	T = 10;
+	cin >> T;
 	for(int tc = 1; tc <= T; tc++) {
-		int N;
-		cin >> N;
-		int count = 0;
-		for(int i = 0; i < N; i++) {
-			for(int j = 0; j < N; j++) {
-				cin >> grid[j][i];				//1 DO    2 XANH
+		cin >> N >> M >> K;
+		for(int i = 1; i <= N; i++) {
+			for(int j = 1; j <= M; j++) {
+				cin >> grid[i][j];
+				if(grid[i][j] == 1) grid[i][j] = 0;
+				else grid[i][j] = 1;
 			}
 		}
-		for(int i = 0; i < N; i++) {
-			init();
-			for(int j = 0; j < N; j++) {
-				if(!grid[i][j]) continue;
-				if(grid[i][j] == 1) push(grid[i][j]);
-				if(grid[i][j] == 2) {
-					if(isEmpty()) continue;
-					if(peek() == grid[i][j]) continue;
-					push(grid[i][j]);
+		for(int i = 0; i < K; i++) {
+			cin >> query[i];
+			canDo[i] = false;
+		}
+		for(int idx = 0; idx < K; idx++) {
+			top1 = -1; top2 = -1;
+			for(int start_row = 1; start_row <= N; start_row++) {
+				for(int start_col = 1; start_col <= M; start_col++) {
+					for(int drow = 0; drow < 3; drow++) {
+						for(int dcol = 0; dcol <= (M - start_col); dcol++) {
+							int end_row = start_row + drow; int end_col = start_col + dcol;
+							int countSlot = 0;
+							if(!isValid(end_row, end_col)) continue;
+							countSlot = cntSlot(start_row, start_col, end_row, end_col);
+							if(countSlot >= query[idx]) {
+								Point temp;
+								temp.startRow = start_row; temp.startCol = start_col; temp.endRow = end_row; temp.endCol = end_col;
+								temp.slot = (dcol + 1) * (drow + 1);
+								push1(temp);
+							}
+						}
+					}
 				}
 			}
-			while(!isEmpty()) {
-				if(peek() == 2) count++;
-				pop();
+			int minRow = 9999999;
+			if(top1 >= 0) {
+				canDo[idx] = true;
+				for(int i = 0; i <= top1; i++) {
+					minRow = min(s1[i].endRow - s1[i].startRow, minRow);
+				}
+				for(int i = 0; i <= top1; i++) {
+					if((s1[i].endRow - s1[i].startRow) == minRow) push2(s1[i]);
+				}
+			} else continue;
+			int minSlot = 9999999;
+			for(int i = 0; i <= top2; i++) {
+				minSlot = min(minSlot, s2[i].slot);
 			}
+			for(int i = 0; i <= top2; i++) {
+				if(s2[i].slot == minSlot) query[idx] = (s2[i].endCol - s2[i].startCol + 1);
+			}
+			
 		}
-		cout << '#' << tc << ' ' << count << '\n';
+		cout << '#' << tc << ' ';
+		for(int i = 0; i < K; i++) {
+			if(canDo[i]) cout << query[i] << ' ';
+			else cout << "-1 ";
+		}
+		cout << '\n';
+
 	}
 	return 0;
 }
-// ...
