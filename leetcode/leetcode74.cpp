@@ -8,7 +8,7 @@ public:
         int right = m*n - 1;
         while(left <= right) {
             int mid = (left + right) / 2;
-            int idx = matrix[mid/m][mid%n];
+            int idx = matrix[mid/n][mid%n];
             if(idx == target) return true;
             else if(idx > target) {
                 right = mid - 1;
